@@ -1,0 +1,56 @@
+iframe style="display:none" height="0" width="0" id="loader"
+
+javascript:
+  (function(){
+
+    // For desktop browser, remember to pass though any metadata on the link for deep linking
+    var fallbackLink = 'https://movielala.com'+ window.location.pathname;
+
+
+    // Simple device detection
+    var isiOS = navigator.userAgent.match('iPad') || navigator.userAgent.match('iPhone') || navigator.userAgent.match('iPod');
+    var browser = 'unknown';
+    if (navigator.userAgent.match('CriOS'))
+      browser = 'chrome';
+    else if(navigator.userAgent.match('Safari'))
+      browser = 'safari';
+
+    // Mobile
+    if (isiOS) {
+      ios_deep_link =  'movielala:/' + window.location.pathname;
+
+      // Load our custom protocol in the iframe, for Chrome and Opera this burys the error dialog (which is actually HTML)
+      // for iOS we will get a popup error if this protocol is not supported, but it won't block javascript
+      // alert(ios_deep_link)
+      document.getElementById('loader').src = ios_deep_link;
+
+      // The fallback link for Android needs to be https:// rather than market:// or the device will try to
+      // load both URLs and only the last one will win. (Especially FireFox, where an "Are You Sure" dialog will appear)
+      // on iOS we can link directly to the App Store as our app switch will fire prior to the switch
+      // If you have a mobile web app, your fallback could be that instead.
+
+      if (browser == 'safari'){
+        fallbackLink = 'itms-apps://itunes.apple.com/app/movielala/id869901634?mt=8' ;
+      }
+      else {
+        location.href = 'https://itunes.apple.com/app/id869901634'
+      }
+
+    }
+
+    // Now we just wait for everything to execute, if the user is redirected to your custom app
+    // the timeout below will never fire, if a custom app is not present (or the user is on the Desktop)
+    // we will replace the current URL with the fallbackLink (store URL or desktop URL as appropriate)
+    window.setTimeout(function (){ window.location.replace(fallbackLink); }, 1);
+
+
+    /*
+     Q&A
+
+     I have a native desktop app as well, how do I link to a custom protocol handler on the desktop?
+     IE Only: http://msdn.microsoft.com/en-us/library/ms537512.aspx#Version_Vectors
+     All Other Browsers: Use a custom plugin like iTunes does: http://ax.itunes.apple.com/detection/itmsCheck.js
+
+     */
+
+  })();
