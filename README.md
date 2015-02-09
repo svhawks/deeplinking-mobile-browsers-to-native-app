@@ -1,4 +1,4 @@
-# deeplinking-mobile-browsers-to-native-app
+# deeplinking mobile browsers to native app
 
 For the perfect code to  deeplinking mobile browsers to native app
 
